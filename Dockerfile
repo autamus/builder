@@ -33,4 +33,4 @@ COPY --from=builder /app/builder /app/builder
 ENV PATH=/opt/spack/bin:$PATH
 
 # Command to run the executable
-ENTRYPOINT ["./builder"]
+ENTRYPOINT ["/app/builder"]
