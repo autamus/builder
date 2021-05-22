@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/autamus/builder/repo"
-	"gopkg.in/yaml.v3"
+	"gopkg.in/yaml.v2"
 )
 
 // Containerize runs spack containerize on an environment

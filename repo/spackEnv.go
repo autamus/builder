@@ -3,7 +3,7 @@ package repo
 import (
 	"io/ioutil"
 
-	"gopkg.in/yaml.v3"
+	"gopkg.in/yaml.v2"
 )
 
 type SpackEnv struct {
@@ -12,7 +12,7 @@ type SpackEnv struct {
 
 type Spack struct {
 	Specs     []string                 `yaml:"specs,omitempty"`
-	View      bool                     `yaml:"view,omitempty"`
+	View      bool                     `yaml:"view"`
 	Packages  map[string]SpackPackages `yaml:"packages,omitempty"`
 	Config    SpackConfig              `yaml:"config,omitempty"`
 	Container SpackContainer           `yaml:"container,omitempty"`
@@ -24,7 +24,7 @@ type SpackPackages struct {
 
 type SpackConfig struct {
 	Compiler                SpackConfigCompiler `yaml:"compiler,omitempty"`
-	InstallMissingCompilers bool                `yaml:"install_missing_compilers,omitempty"`
+	InstallMissingCompilers bool                `yaml:"install_missing_compilers"`
 }
 
 type SpackConfigCompiler struct {
@@ -33,7 +33,7 @@ type SpackConfigCompiler struct {
 
 type SpackContainer struct {
 	OSPackages SpackContainerPackages `yaml:"os_packages,omitempty"`
-	Strip      bool                   `yaml:"strip,omitempty"`
+	Strip      bool                   `yaml:"strip"`
 }
 
 type SpackContainerPackages struct {
