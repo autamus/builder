@@ -11,34 +11,34 @@ type SpackEnv struct {
 }
 
 type Spack struct {
-	Specs     []string                 `yaml:"specs,omitempty"`
+	Specs     []string                 `yaml:"specs"`
 	View      bool                     `yaml:"view"`
-	Packages  map[string]SpackPackages `yaml:"packages,omitempty"`
-	Config    SpackConfig              `yaml:"config,omitempty"`
-	Container SpackContainer           `yaml:"container,omitempty"`
+	Packages  map[string]SpackPackages `yaml:"packages"`
+	Config    SpackConfig              `yaml:"config"`
+	Container SpackContainer           `yaml:"container"`
 }
 
 type SpackPackages struct {
-	Target []string `yaml:"target,omitempty"`
+	Target []string `yaml:"target"`
 }
 
 type SpackConfig struct {
-	Compiler                SpackConfigCompiler `yaml:"compiler,omitempty"`
+	Compiler                SpackConfigCompiler `yaml:"compiler"`
 	InstallMissingCompilers bool                `yaml:"install_missing_compilers"`
 }
 
 type SpackConfigCompiler struct {
-	Target string `yaml:"target,omitempty"`
+	Target string `yaml:"target"`
 }
 
 type SpackContainer struct {
-	OSPackages SpackContainerPackages `yaml:"os_packages,omitempty"`
+	OSPackages SpackContainerPackages `yaml:"os_packages"`
 	Strip      bool                   `yaml:"strip"`
 }
 
 type SpackContainerPackages struct {
-	Build []string `yaml:"build,omitempty"`
-	Final []string `yaml:"final,omitempty"`
+	Build []string `yaml:"build"`
+	Final []string `yaml:"final"`
 }
 
 func defaultEnv(defaultPath string) (output SpackEnv, err error) {
