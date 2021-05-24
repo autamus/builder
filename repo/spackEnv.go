@@ -67,7 +67,7 @@ func ParseSpackEnv(defaultPath, containerPath string) (result SpackEnv, err erro
 	}
 
 	// Clean specs from varient/version information.
-	specs := make([]string, len(result.Spack.Specs))
+	specs := []string{}
 	for _, spec := range result.Spack.Specs {
 		i := strings.IndexFunc(spec, versend)
 		if i > 0 {
