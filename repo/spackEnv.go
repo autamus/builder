@@ -12,40 +12,40 @@ type SpackEnv struct {
 }
 
 type Spack struct {
-	Specs     []string                 `yaml:"specs"`
+	Specs     []string                 `yaml:"specs,omitempty"`
 	View      bool                     `yaml:"view"`
-	Packages  map[string]SpackPackages `yaml:"packages"`
-	Config    SpackConfig              `yaml:"config"`
-	Container SpackContainer           `yaml:"container"`
+	Packages  map[string]SpackPackages `yaml:"packages,omitempty"`
+	Config    SpackConfig              `yaml:"config,omitempty"`
+	Container SpackContainer           `yaml:"container,omitempty"`
 }
 
 type SpackPackages struct {
-	Target []string `yaml:"target"`
+	Target []string `yaml:"target,omitempty"`
 }
 
 type SpackConfig struct {
-	Compiler                SpackConfigCompiler `yaml:"compiler"`
+	Compiler                SpackConfigCompiler `yaml:"compiler,omitempty"`
 	InstallMissingCompilers bool                `yaml:"install_missing_compilers"`
 }
 
 type SpackConfigCompiler struct {
-	Target string `yaml:"target"`
+	Target string `yaml:"target,omitempty"`
 }
 
 type SpackContainer struct {
-	OSPackages SpackContainerPackages `yaml:"os_packages"`
-	Images     SpackContainerImages   `yaml:"images"`
+	OSPackages SpackContainerPackages `yaml:"os_packages,omitempty"`
+	Images     SpackContainerImages   `yaml:"images,omitempty"`
 	Strip      bool                   `yaml:"strip"`
 }
 
 type SpackContainerImages struct {
-	Build string `yaml:"build"`
-	Final string `yaml:"final"`
+	Build string `yaml:"build,omitempty"`
+	Final string `yaml:"final,omitempty"`
 }
 
 type SpackContainerPackages struct {
-	Build []string `yaml:"build"`
-	Final []string `yaml:"final"`
+	Build []string `yaml:"build,omitempty"`
+	Final []string `yaml:"final,omitempty"`
 }
 
 func defaultEnv(defaultPath string) (output SpackEnv, err error) {
