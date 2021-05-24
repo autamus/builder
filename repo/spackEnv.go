@@ -2,6 +2,7 @@ package repo
 
 import (
 	"io/ioutil"
+	"strings"
 
 	"gopkg.in/yaml.v2"
 )
@@ -54,12 +55,38 @@ func defaultEnv(defaultPath string) (output SpackEnv, err error) {
 func ParseSpackEnv(defaultPath, containerPath string) (result SpackEnv, err error) {
 	result, err = defaultEnv(defaultPath)
 	if err != nil {
-		return result, err
+		return
 	}
 	input, err := ioutil.ReadFile(containerPath)
 	if err != nil {
-		return result, err
+		return
 	}
 	err = yaml.Unmarshal(input, &result)
-	return result, err
+	if err != nil {
+		return
+	}
+
+	// Clean specs from varient/version information.
+	specs := make([]string, len(result.Spack.Specs))
+	for _, spec := range result.Spack.Specs {
+		i := strings.IndexFunc(spec, versend)
+		if i > 0 {
+			specs = append(specs, spec[:i])
+		} else {
+			specs = append(specs, spec)
+		}
+	}
+	result.Spack.Specs = specs
+
+	return result, nil
+}
+
+// versend returns true at the end of the name of a dependency
+func versend(input rune) bool {
+	for _, c := range []rune{'@', '~', '+'} {
+		if input == c {
+			return true
+		}
+	}
+	return false
 }
