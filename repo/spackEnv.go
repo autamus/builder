@@ -34,7 +34,13 @@ type SpackConfigCompiler struct {
 
 type SpackContainer struct {
 	OSPackages SpackContainerPackages `yaml:"os_packages"`
+	Images     SpackContainerImages   `yaml:"images"`
 	Strip      bool                   `yaml:"strip"`
+}
+
+type SpackContainerImages struct {
+	Build string `yaml:"build"`
+	Final string `yaml:"final"`
 }
 
 type SpackContainerPackages struct {
