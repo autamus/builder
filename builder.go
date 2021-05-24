@@ -59,12 +59,15 @@ func main() {
 			log.Fatal(err)
 		}
 	} else {
-		currentVersion = "latest"
 		output, err := ioutil.ReadFile(cPath)
 		if err != nil {
 			log.Fatal(err)
 		}
 		currentDockerfile = string(output)
+	}
+	// Override an empty version with latest
+	if currentVersion == "" {
+		currentVersion = "latest"
 	}
 
 	// Write the Dockerfile out to Disk
