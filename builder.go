@@ -15,6 +15,15 @@ import (
 )
 
 func main() {
+	fmt.Println()
+	fmt.Print(` ____        _ _     _           
+| __ ) _   _(_) | __| | ___ _ __ 
+|  _ \| | | | | |/ _' |/ _ \ '__|
+| |_) | |_| | | | (_| |  __/ |   
+|____/ \__,_|_|_|\__,_|\___|_|   
+`)
+	fmt.Printf("Application Version: v%s\n", config.Global.General.Version)
+	fmt.Println()
 	// Initialize parser functionality
 	parser.Init(strings.Split(config.Global.Parsers.Loaded, ","))
 
