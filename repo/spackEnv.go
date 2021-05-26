@@ -15,8 +15,8 @@ type Spack struct {
 	Specs     []string                 `yaml:"specs,omitempty"`
 	View      bool                     `yaml:"view"`
 	Packages  map[string]SpackPackages `yaml:"packages,omitempty"`
-	Config    SpackConfig              `yaml:"config,omitempty"`
-	Container SpackContainer           `yaml:"container,omitempty"`
+	Config    SpackConfig              `yaml:"config"`
+	Container SpackContainer           `yaml:"container"`
 }
 
 type SpackPackages struct {
