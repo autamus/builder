@@ -49,7 +49,7 @@ func init() {
 }
 
 func defaultConfig() {
-	Global.General.Version = "0.0.1"
+	Global.General.Version = "0.0.9"
 	Global.Containers.Path = "containers/"
 	Global.Containers.DefaultEnVPath = "default.yaml"
 	Global.Packages.Path = "spack/"
