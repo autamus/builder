@@ -4,7 +4,6 @@ import (
 	"errors"
 	"os"
 	"path/filepath"
-	"strings"
 )
 
 const DockerType = "Dockerfile"
@@ -15,7 +14,7 @@ func GetContainerType(containersPath, containerName string) (result, resultPath 
 	spackEnv := false
 	// Search containers for specified container
 	err = filepath.Walk(containersPath, func(path string, info os.FileInfo, err error) error {
-		if strings.Contains(path, "/"+containerName+"/") {
+		if filepath.Base(filepath.Dir(path)) == containerName {
 			match, _ := filepath.Match("spack.yaml", filepath.Base(path))
 			if match {
 				spackEnv = true
