@@ -37,6 +37,10 @@ func main() {
 	currentVersion := ""
 	currentDockerfile := ""
 
+	// Check if the current run is a PR
+	prVal, prExists := os.LookupEnv("GITHUB_EVENT_NAME")
+	isPR := prExists && prVal == "pull_request"
+
 	// Get the type of the container from the repository.
 	cType, cPath, err := repo.GetContainerType(containersPath, currentContainer)
 	if err != nil {
@@ -63,7 +67,7 @@ func main() {
 		currentVersion = result.Package.GetLatestVersion().String()
 
 		// Containerize SpackEnv to Dockerfile
-		currentDockerfile, err = spack.Containerize(spackEnv)
+		currentDockerfile, err = spack.Containerize(spackEnv, isPR)
 		if err != nil {
 			log.Fatal(err)
 		}

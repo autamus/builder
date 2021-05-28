@@ -17,6 +17,7 @@ type Spack struct {
 	Packages  map[string]SpackPackages `yaml:"packages,omitempty"`
 	Config    SpackConfig              `yaml:"config"`
 	Container SpackContainer           `yaml:"container"`
+	Mirrors   map[string]string        `yaml:"mirrors,omitempty"`
 }
 
 type SpackPackages struct {
