@@ -62,9 +62,7 @@ func Containerize(sEnv repo.SpackEnv, isPR bool) (dockerfile string, err error) 
 	buildPublish := "RUN --mount=type=secret,id=aws_id " +
 		"--mount=type=secret,id=aws_secret " +
 		"--mount=type=secret,id=sign_key " +
-		"--mount=type=secret,id=package " +
-		"cat /run/secrets/package " +
-		"&& cd /opt/spack-environment && spack env activate . " +
+		"cd /opt/spack-environment && spack env activate . " +
 		"&& export AWS_ACCESS_KEY_ID=$(cat /run/secrets/aws_id) " +
 		"&& export AWS_SECRET_ACCESS_KEY=$(cat /run/secrets/aws_secret) " +
 		"&& curl http://s3.amazonaws.com/autamus-cache/build_cache/_pgp/FFEB24B0A9D81F6D5597F9900B59588C86C41BE7.pub > key.pub " +
