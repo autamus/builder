@@ -68,7 +68,7 @@ func Containerize(sEnv repo.SpackEnv, isPR bool) (dockerfile string, err error) 
 		"&& curl http://s3.amazonaws.com/autamus-cache/build_cache/_pgp/FFEB24B0A9D81F6D5597F9900B59588C86C41BE7.pub > key.pub " +
 		"&& spack gpg trust key.pub && spack install --fail-fast " +
 		"&& spack gpg trust /run/secrets/sign_key " +
-		"&& spack buildcache create -m autamus && spack gc -y"
+		"&& spack buildcache create -r -a -m autamus && spack gc -y"
 	buildPR := "RUN cd /opt/spack-environment && spack env activate . " +
 		"&& curl http://s3.amazonaws.com/autamus-cache/build_cache/_pgp/FFEB24B0A9D81F6D5597F9900B59588C86C41BE7.pub > key.pub " +
 		"&& spack gpg trust key.pub && spack install --fail-fast && spack gc -y"
