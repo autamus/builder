@@ -29,6 +29,7 @@ func main() {
 
 	// Set inital values for Repository
 	path := config.Global.Repository.Path
+	pubKeyURL := config.Global.Packages.PublicKeyURL
 	packagesPath := filepath.Join(path, config.Global.Packages.Path)
 	containersPath := filepath.Join(path, config.Global.Containers.Path)
 	defaultEnvPath := filepath.Join(path, config.Global.Containers.DefaultEnVPath)
@@ -67,7 +68,7 @@ func main() {
 		currentVersion = result.Package.GetLatestVersion().String()
 
 		// Containerize SpackEnv to Dockerfile
-		currentDockerfile, err = spack.Containerize(spackEnv, isPR)
+		currentDockerfile, err = spack.Containerize(spackEnv, isPR, pubKeyURL)
 		if err != nil {
 			log.Fatal(err)
 		}

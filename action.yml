@@ -17,8 +17,12 @@ inputs:
     required: false
     default: 'containers'
   parsers_loaded:
-    description: 'Similar to Binoc which parsers to use on the repository seperated by commas.'
+    description: 'Similar to Binoc which parsers to use on the repository separated by commas.'
     default: 'spack'
+    required: false
+  packages_publickeyurl:
+    description: 'URL of the public key used to sign packages in the build cache, if applicable.'
+    default: ''
     required: false
 runs:
   using: 'docker'

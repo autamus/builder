@@ -11,7 +11,7 @@ import (
 
 // Containerize runs spack containerize on an environment
 // and returns the resulting dockerfile.
-func Containerize(sEnv repo.SpackEnv, isPR bool) (dockerfile string, err error) {
+func Containerize(sEnv repo.SpackEnv, isPR bool, PublicKeyURL string) (dockerfile string, err error) {
 	// Create spack.yaml file.
 	f, err := os.Create("spack.yaml")
 	if err != nil {
@@ -65,18 +65,20 @@ func Containerize(sEnv repo.SpackEnv, isPR bool) (dockerfile string, err error) 
 		"cd /opt/spack-environment && spack env activate . " +
 		"&& export AWS_ACCESS_KEY_ID=$(cat /run/secrets/aws_id) " +
 		"&& export AWS_SECRET_ACCESS_KEY=$(cat /run/secrets/aws_secret) " +
-		"&& curl http://s3.amazonaws.com/autamus-cache/build_cache/_pgp/FFEB24B0A9D81F6D5597F9900B59588C86C41BE7.pub > key.pub " +
+		"&& curl " + PublicKeyURL + " > key.pub " +
 		"&& spack gpg trust key.pub && spack install --fail-fast " +
 		"&& spack gpg trust /run/secrets/sign_key " +
 		"&& spack buildcache create -r -a -m autamus && spack gc -y"
 	buildPR := "RUN cd /opt/spack-environment && spack env activate . " +
-		"&& curl http://s3.amazonaws.com/autamus-cache/build_cache/_pgp/FFEB24B0A9D81F6D5597F9900B59588C86C41BE7.pub > key.pub " +
+		"&& curl " + PublicKeyURL + " > key.pub " +
 		"&& spack gpg trust key.pub && spack install --fail-fast && spack gc -y"
 
-	if isPR {
-		dockerfile = strings.Replace(dockerfile, buildOld, buildPR, 1)
-	} else {
-		dockerfile = strings.Replace(dockerfile, buildOld, buildPublish, 1)
+	if len(sEnv.Spack.Mirrors) > 0 {
+		if isPR {
+			dockerfile = strings.Replace(dockerfile, buildOld, buildPR, 1)
+		} else {
+			dockerfile = strings.Replace(dockerfile, buildOld, buildPublish, 1)
+		}
 	}
 
 	return dockerfile, nil

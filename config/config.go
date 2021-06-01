@@ -20,7 +20,8 @@ type general struct {
 }
 
 type packages struct {
-	Path string
+	Path         string
+	PublicKeyURL string
 }
 
 type containers struct {
