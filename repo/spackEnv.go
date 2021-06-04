@@ -25,9 +25,14 @@ type SpackPackages struct {
 }
 
 type SpackConfig struct {
-	Compiler                SpackConfigCompiler `yaml:"compiler,omitempty"`
-	InstallMissingCompilers bool                `yaml:"install_missing_compilers"`
-	InstallTree             string              `yaml:"install_tree,omitempty"`
+	Compiler                SpackConfigCompiler    `yaml:"compiler,omitempty"`
+	InstallMissingCompilers bool                   `yaml:"install_missing_compilers"`
+	InstallTree             SpackConfigInstallTree `yaml:"install_tree,omitempty"`
+}
+
+type SpackConfigInstallTree struct {
+	Root         string `yaml:"root,omitempty"`
+	PaddedLength string `yaml:"padded_length,omitempty"`
 }
 
 type SpackConfigCompiler struct {
