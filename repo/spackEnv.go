@@ -32,7 +32,7 @@ type SpackConfig struct {
 
 type SpackConfigInstallTree struct {
 	Root         string `yaml:"root,omitempty"`
-	PaddedLength string `yaml:"padded_length,omitempty"`
+	PaddedLength int    `yaml:"padded_length,omitempty"`
 }
 
 type SpackConfigCompiler struct {
