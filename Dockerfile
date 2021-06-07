@@ -1,8 +1,5 @@
 # Start from the latest golang base image
-FROM golang:latest as builder
-
-# Add Maintainer Info
-LABEL maintainer="Alec Scott <alecbcs@github.com>"
+FROM ghcr.io/autamus/go:latest as builder
 
 # Set the Current Working Directory inside the container
 WORKDIR /app
