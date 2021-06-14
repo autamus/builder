@@ -55,7 +55,7 @@ func Containerize(sEnv repo.SpackEnv, isPR bool, PublicKeyURL string) (dockerfil
 	// Add Autamus Repo to Container
 	addHook := "as builder"
 	addCommand := "as builder\n\nADD repo /opt/spack/var/spack/repos/builtin/packages/\n\n" +
-		"RUN --mount=type=bind,target=~/.spack/reports/monitor,src=monitor/"
+		"RUN --mount=type=bind,target=~/.spack,src=monitor/"
 	dockerfile = strings.Replace(dockerfile, addHook, addCommand, 1)
 
 	// Add support for build cache
