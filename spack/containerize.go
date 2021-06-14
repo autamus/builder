@@ -54,8 +54,7 @@ func Containerize(sEnv repo.SpackEnv, isPR bool, PublicKeyURL string) (dockerfil
 
 	// Add Autamus Repo to Container
 	addHook := "as builder"
-	addCommand := "as builder\n\nADD repo /opt/spack/var/spack/repos/builtin/packages/\n\n" +
-		"RUN --mount=type=bind,target=~/.spack,src=monitor/"
+	addCommand := "as builder\n\nADD repo /opt/spack/var/spack/repos/builtin/packages/"
 	dockerfile = strings.Replace(dockerfile, addHook, addCommand, 1)
 
 	// Add support for build cache
@@ -63,6 +62,7 @@ func Containerize(sEnv repo.SpackEnv, isPR bool, PublicKeyURL string) (dockerfil
 	buildPublish := "RUN --mount=type=secret,id=aws_id " +
 		"--mount=type=secret,id=aws_secret " +
 		"--mount=type=secret,id=sign_key " +
+		"--mount=type=bind,target=~/.spack/reports/monitor,src=monitor/,readwrite " +
 		"cd /opt/spack-environment && spack env activate . " +
 		"&& export AWS_ACCESS_KEY_ID=$(cat /run/secrets/aws_id) " +
 		"&& export AWS_SECRET_ACCESS_KEY=$(cat /run/secrets/aws_secret) " +
@@ -70,7 +70,8 @@ func Containerize(sEnv repo.SpackEnv, isPR bool, PublicKeyURL string) (dockerfil
 		"&& spack gpg trust key.pub && spack install --fail-fast --monitor --monitor-save-local " +
 		"&& spack gpg trust /run/secrets/sign_key " +
 		"&& spack buildcache create -r -a -m autamus && spack gc -y"
-	buildPR := "RUN cd /opt/spack-environment && spack env activate . " +
+	buildPR := "RUN --mount=type=bind,target=~/.spack/reports/monitor,src=monitor/,readwrite " +
+		"cd /opt/spack-environment && spack env activate . " +
 		"&& curl " + PublicKeyURL + " > key.pub " +
 		"&& spack gpg trust key.pub && spack install --fail-fast --monitor --monitor-save-local " +
 		"&& spack gc -y"
