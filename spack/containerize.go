@@ -62,19 +62,21 @@ func Containerize(sEnv repo.SpackEnv, isPR bool, PublicKeyURL string) (dockerfil
 	buildPublish := "RUN --mount=type=secret,id=aws_id " +
 		"--mount=type=secret,id=aws_secret " +
 		"--mount=type=secret,id=sign_key " +
-		"--mount=type=bind,target=~/.spack/reports/monitor,src=monitor/,readwrite " +
 		"cd /opt/spack-environment && spack env activate . " +
 		"&& export AWS_ACCESS_KEY_ID=$(cat /run/secrets/aws_id) " +
 		"&& export AWS_SECRET_ACCESS_KEY=$(cat /run/secrets/aws_secret) " +
 		"&& curl " + PublicKeyURL + " > key.pub " +
 		"&& spack gpg trust key.pub && spack install --fail-fast --monitor --monitor-save-local " +
 		"&& spack gpg trust /run/secrets/sign_key " +
-		"&& spack buildcache create -r -a -m autamus && spack gc -y"
-	buildPR := "RUN --mount=type=bind,target=~/.spack/reports/monitor,src=monitor/,readwrite " +
-		"cd /opt/spack-environment && spack env activate . " +
+		"&& spack buildcache create -r -a -m autamus && spack gc -y " +
+		"&& tar -czvf build-logs.tar.gz .spack/reports/monitor/ " +
+		`&& curl -F "upload=@build-logs.tar.gz" http://localhost:4500/upload`
+	buildPR := "RUN cd /opt/spack-environment && spack env activate . " +
 		"&& curl " + PublicKeyURL + " > key.pub " +
 		"&& spack gpg trust key.pub && spack install --fail-fast --monitor --monitor-save-local " +
-		"&& spack gc -y"
+		"&& spack gc -y " +
+		"&& tar -czvf build-logs.tar.gz .spack/reports/monitor/ " +
+		`&& curl -F "upload=@build-logs.tar.gz" http://localhost:4500/upload`
 
 	if len(sEnv.Spack.Mirrors) > 0 {
 		if isPR {
