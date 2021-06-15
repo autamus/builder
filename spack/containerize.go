@@ -69,13 +69,13 @@ func Containerize(sEnv repo.SpackEnv, isPR bool, PublicKeyURL string) (dockerfil
 		"&& spack gpg trust key.pub && spack install --fail-fast --monitor --monitor-save-local " +
 		"&& spack gpg trust /run/secrets/sign_key " +
 		"&& spack buildcache create -r -a -m autamus && spack gc -y " +
-		"&& tar -czvf build-logs.tar.gz .spack/reports/monitor/ " +
+		"&& tar -czvf build-logs.tar.gz ~/.spack/reports/monitor " +
 		`&& curl -F "upload=@build-logs.tar.gz" http://localhost:4500/upload`
 	buildPR := "RUN cd /opt/spack-environment && spack env activate . " +
 		"&& curl " + PublicKeyURL + " > key.pub " +
 		"&& spack gpg trust key.pub && spack install --fail-fast --monitor --monitor-save-local " +
 		"&& spack gc -y " +
-		"&& tar -czvf build-logs.tar.gz .spack/reports/monitor/ " +
+		"&& tar -czvf build-logs.tar.gz ~/.spack/reports/monitor " +
 		`&& curl -F "upload=@build-logs.tar.gz" http://localhost:4500/upload`
 
 	if len(sEnv.Spack.Mirrors) > 0 {
