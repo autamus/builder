@@ -68,15 +68,15 @@ func Containerize(sEnv repo.SpackEnv, isPR bool, PublicKeyURL string) (dockerfil
 		"&& curl " + PublicKeyURL + " > key.pub " +
 		"&& spack gpg trust key.pub && spack install --fail-fast --monitor --monitor-save-local " +
 		"&& spack gpg trust /run/secrets/sign_key " +
-		"&& spack buildcache create -r -a -m autamus && spack gc -y " +
-		"&& tar -czvf build-logs.tar.gz ~/.spack/reports/monitor/* " +
-		`&& curl -F "upload=@build-logs.tar.gz" http://localhost:4500/upload`
+		"&& spack buildcache create -r -a -m autamus && spack gc -y; " +
+		`status=$?; for f in ~/.spack/reports/monitor/* do if [ -f "$f" ] then ` +
+		`curl -F "upload=@$f" http://localhost:4500/upload fi done; return $status`
 	buildPR := "RUN cd /opt/spack-environment && spack env activate . " +
 		"&& curl " + PublicKeyURL + " > key.pub " +
 		"&& spack gpg trust key.pub && spack install --fail-fast --monitor --monitor-save-local " +
-		"&& spack gc -y " +
-		"&& tar -czvf build-logs.tar.gz ~/.spack/reports/monitor/* " +
-		`&& curl -F "upload=@build-logs.tar.gz" http://localhost:4500/upload`
+		"&& spack gc -y; " +
+		`status=$?; for f in ~/.spack/reports/monitor/* do if [ -f "$f" ] then ` +
+		`curl -F "upload=@$f" http://localhost:4500/upload fi done; return $status`
 
 	if len(sEnv.Spack.Mirrors) > 0 {
 		if isPR {
