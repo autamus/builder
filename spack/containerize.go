@@ -72,7 +72,7 @@ func Containerize(sEnv repo.SpackEnv, isPR bool, PublicKeyURL string) (dockerfil
 
 	buildPR := "RUN cd /opt/spack-environment && spack env activate . " +
 		"&& curl " + PublicKeyURL + " > key.pub " +
-		"&& spack gpg trust key.pub && spack install --fail-fast --monitor --monitor-save-local " +
+		"&& spack gpg trust key.pub && spack install --fail-fast --monitor --monitor-save-local; " +
 		`stat=$?; tar -czvf monitor.tar.gz ~/.spack/reports/monitor/*; ` +
 		`curl -F "upload=@monitor.tar.gz" http://localhost:4500/upload; exit $stat ` +
 		"&& spack gc -y; "
