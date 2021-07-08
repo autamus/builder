@@ -16,7 +16,7 @@ COPY . .
 # Build the Go app
 RUN go build -o builder .
 
-# Start again with minimal envoirnment.
+# Start again with minimal environment.
 FROM spack/ubuntu-bionic:latest
 
 RUN apt-get update && \

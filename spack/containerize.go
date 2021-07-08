@@ -58,7 +58,9 @@ func Containerize(sEnv repo.SpackEnv, isPR bool, PublicKeyURL string) (dockerfil
 	dockerfile = strings.Replace(dockerfile, addHook, addCommand, 1)
 
 	// Add support for build cache
+	// The lines replaced here are the same line, one with and one without monitor
 	buildOld := "RUN cd /opt/spack-environment && spack env activate . && spack install --fail-fast && spack gc -y"
+	buildOldMonitor := "RUN  cd /opt/spack-environment && spack env activate . && export SPACKMON_USER=$(cat /run/secrets/su) && export SPACKMON_TOKEN=$(cat /run/secrets/st) && spack install --fail-fast && spack gc -y"
 	buildPublish := "RUN --mount=type=secret,id=aws_id " +
 		"--mount=type=secret,id=aws_secret " +
 		"--mount=type=secret,id=sign_key " +
@@ -80,8 +82,10 @@ func Containerize(sEnv repo.SpackEnv, isPR bool, PublicKeyURL string) (dockerfil
 	if len(sEnv.Spack.Mirrors) > 0 {
 		if isPR {
 			dockerfile = strings.Replace(dockerfile, buildOld, buildPR, 1)
+			dockerfile = strings.Replace(dockerfile, buildOldMonitor, buildPR, 1)
 		} else {
 			dockerfile = strings.Replace(dockerfile, buildOld, buildPublish, 1)
+			dockerfile = strings.Replace(dockerfile, buildOldMonitor, buildPublish, 1)
 		}
 	}
 
