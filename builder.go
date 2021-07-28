@@ -55,7 +55,8 @@ func main() {
 			log.Fatal(err)
 		}
 		// Find the path to the main spec package
-		specPath, err := repo.FindPackagePath(spackEnv.Spack.Specs[0], packagesPath)
+		packageName := repo.GetPackageFromSpec(spackEnv.Spack.Specs[0])
+		specPath, err := repo.FindPackagePath(packageName, packagesPath)
 		if err != nil {
 			log.Fatal(err)
 		}
