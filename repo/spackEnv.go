@@ -25,6 +25,7 @@ type SpackPackages struct {
 }
 
 type SpackConfig struct {
+	Concretizer             string                 `yaml:"concretizer,omitempty"`
 	Compiler                SpackConfigCompiler    `yaml:"compiler,omitempty"`
 	InstallMissingCompilers bool                   `yaml:"install_missing_compilers"`
 	InstallTree             SpackConfigInstallTree `yaml:"install_tree,omitempty"`
