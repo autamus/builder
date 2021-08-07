@@ -8,11 +8,12 @@ import (
 
 // Config defines the configuration struct for importing settings from ENV Variables
 type Config struct {
-	General    general
-	Packages   packages
 	Containers containers
-	Repository repository
+	General    general
+	Multistage multistage
+	Packages   packages
 	Parsers    parsers
+	Repository repository
 }
 
 type general struct {
@@ -33,6 +34,13 @@ type containers struct {
 type repository struct {
 	Path          string
 	DefaultBranch string
+}
+
+type multistage struct {
+	Topath	string
+	Frompath	string
+	Base	string
+	Suffix	string
 }
 
 type parsers struct {
@@ -57,6 +65,10 @@ func defaultConfig() {
 	Global.Repository.Path = "."
 	Global.Repository.DefaultBranch = "main"
 	Global.Parsers.Loaded = "spack"
+	Global.Multistage.Topath = ""
+	Global.Multistage.Frompath = ""
+	Global.Multistage.Base = "spack/ubuntu-bionic"
+	Global.Multistage.Suffix = "-layers"
 }
 
 func parseConfigEnv() {

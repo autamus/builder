@@ -10,6 +10,7 @@ import (
 
 	parser "github.com/autamus/binoc/repo"
 	"github.com/autamus/builder/config"
+	"github.com/autamus/builder/container"
 	"github.com/autamus/builder/repo"
 	"github.com/autamus/builder/spack"
 )
@@ -33,10 +34,17 @@ func main() {
 	packagesPath := filepath.Join(path, config.Global.Packages.Path)
 	containersPath := filepath.Join(path, config.Global.Containers.Path)
 	defaultEnvPath := filepath.Join(path, config.Global.Containers.DefaultEnVPath)
+
 	// Declare container values
 	currentContainer := config.Global.Containers.Current
 	currentVersion := ""
 	currentDockerfile := ""
+
+	// Variables for multi-stage build container
+	multistageToPath := config.Global.Multistage.Topath
+	multistageFromPath := config.Global.Multistage.Frompath
+	multistageBase := config.Global.Multistage.Base
+	multistageSuffix := config.Global.Multistage.Suffix
 
 	// Check if the current run is a PR
 	prVal, prExists := os.LookupEnv("GITHUB_EVENT_NAME")
@@ -73,6 +81,7 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
+
 	} else {
 		output, err := ioutil.ReadFile(cPath)
 		if err != nil {
@@ -95,6 +104,31 @@ func main() {
 		log.Fatal(err)
 	}
 	f.Close()
+
+	// Generate a multistage build with the container
+	if multistageFromPath != "" {
+		fmt.Printf("Generating multistage build container.\n")
+		fmt.Println()
+		multistageDockerfile := container.MultiStageBuild(currentContainer,
+			currentVersion,
+			multistageToPath,
+			multistageFromPath,
+			multistageBase)
+
+		// Write the layer Dockerfile out to Disk
+		f, err := os.Create(filepath.Join(path, "Dockerfile.multistage"))
+		if err != nil {
+			log.Fatal(err)
+		}
+		_, err = f.WriteString(multistageDockerfile)
+		if err != nil {
+			log.Fatal(err)
+		}
+		f.Close()
+
+		// Set multistage build suffix as output
+		fmt.Printf("::set-output name=multistage_suffix::%s\n", multistageSuffix)
+	}
 
 	// Save Container Name and Version as Output
 	fmt.Printf("::set-output name=container::%s\n", currentContainer)

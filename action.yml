@@ -24,9 +24,27 @@ inputs:
     description: 'URL of the public key used to sign packages in the build cache, if applicable.'
     default: ''
     required: false
+  multistage_frompath:
+    description: Copy from this path.
+    default: ""
+    required: false
+  multistage_topath:
+    description: To this path. If not defined, the same fromPath is used.
+    default: ""
+    required: false
+  multistage_base:
+    description: The base of the multistage build
+    default: scratch
+    required: false
+  multistage_suffix:
+    description: The suffix to add to the container name for the multi-stage build container. 
+    default: "-layers"
+    required: false
+
 runs:
   using: 'docker'
-  image: 'docker://ghcr.io/autamus/builder:latest'
+  image: Dockerfile
+#  image: 'docker://ghcr.io/autamus/builder:latest'
 branding:
   icon: 'activity'
   color: 'white'

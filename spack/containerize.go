@@ -58,6 +58,7 @@ func Containerize(sEnv repo.SpackEnv, isPR bool, PublicKeyURL string) (dockerfil
 	dockerfile = strings.Replace(dockerfile, addHook, addCommand, 1)
 
 	// Add support for build cache
+	// The lines replaced here are the same line, one with and one without monitor
 	buildOld := "RUN cd /opt/spack-environment && spack env activate . && spack install --fail-fast && spack gc -y"
 	buildOldMonitor := "RUN  cd /opt/spack-environment && spack env activate . && export SPACKMON_USER=$(cat /run/secrets/su) && export SPACKMON_TOKEN=$(cat /run/secrets/st) && spack install --fail-fast && spack gc -y"
 	buildPublish := "RUN --mount=type=secret,id=aws_id " +
