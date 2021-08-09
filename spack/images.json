@@ -4,14 +4,14 @@
         "os_package_manager": "apt",
         "build": "ghcr.io/spack/ubuntu-bionic",
         "build_tags": {
-          "latest": "latest"
+          "develop": "latest"
         }
       },
       "ubuntu:16.04": {
         "os_package_manager": "apt",
         "build": "ghcr.io/spack/ubuntu-xenial",
         "build_tags": {
-          "latest": "latest"
+          "develop": "latest"
         }
       },
       "centos:7": {
@@ -19,7 +19,7 @@
         "environment": [],
         "build": "ghcr.io/spack/centos7",
         "build_tags": {
-          "latest": "latest"
+          "develop": "latest"
         }
       }
     },
