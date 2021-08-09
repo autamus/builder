@@ -63,17 +63,19 @@ func Containerize(sEnv repo.SpackEnv, isPR bool, PublicKeyURL string) (dockerfil
 	buildPublish := "RUN --mount=type=secret,id=aws_id " +
 		"--mount=type=secret,id=aws_secret " +
 		"--mount=type=secret,id=sign_key " +
-		"cd /opt/spack-environment && spack env activate . " +
+		"cd /opt/spack-environment " +
 		"&& export AWS_ACCESS_KEY_ID=$(cat /run/secrets/aws_id) " +
 		"&& export AWS_SECRET_ACCESS_KEY=$(cat /run/secrets/aws_secret) " +
 		"&& curl " + PublicKeyURL + " > key.pub " +
-		"&& spack gpg trust key.pub && spack install --fail-fast" +
+		"&& spack gpg trust key.pub && spack env activate . " +
+		"&& spack install --fail-fast" +
 		"&& spack gpg trust /run/secrets/sign_key " +
 		"&& spack buildcache create -r -a -m autamus && spack gc -y"
 
-	buildPR := "RUN cd /opt/spack-environment && spack env activate . " +
+	buildPR := "RUN cd /opt/spack-environment " +
 		"&& curl " + PublicKeyURL + " > key.pub " +
-		"&& spack gpg trust key.pub && spack install --fail-fast --monitor --monitor-save-local --monitor-tags autamus; " +
+		"&& spack gpg trust key.pub && spack env activate . " +
+		"&& spack install --fail-fast --monitor --monitor-save-local --monitor-tags autamus; " +
 		`stat=$?; cd ~/.spack/reports/monitor/; tar -czvf monitor.tar.gz *; ` +
 		`curl -F "upload=@monitor.tar.gz" http://localhost:4500/upload; exit $stat ` +
 		"&& spack gc -y; "
