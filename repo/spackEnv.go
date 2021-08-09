@@ -37,7 +37,7 @@ type SpackConfigInstallTree struct {
 }
 
 type SpackConfigCompiler struct {
-	Target string `yaml:"target,omitempty"`
+	Target []string `yaml:"target,omitempty"`
 }
 
 type SpackContainer struct {
