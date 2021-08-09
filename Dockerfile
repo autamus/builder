@@ -17,7 +17,7 @@ COPY . .
 RUN go build -o builder .
 
 # Start again with minimal envoirnment.
-FROM spack/ubuntu-bionic:latest
+FROM ghcr.io/spack/ubuntu-bionic:latest
 
 RUN apt-get update && \
     apt-get install -y ca-certificates
@@ -26,6 +26,7 @@ RUN apt-get update && \
 WORKDIR /app
 
 COPY --from=builder /app/builder /app/builder
+COPY spack/images.json /opt/spack/lib/spack/spack/container/images.json
 
 ENV PATH=/opt/spack/bin:$PATH
 

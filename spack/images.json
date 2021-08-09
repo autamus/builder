@@ -1,0 +1,38 @@
+{
+    "images": {
+      "ubuntu:18.04": {
+        "os_package_manager": "apt",
+        "build": "ghcr.io/spack/ubuntu-bionic",
+        "build_tags": {
+          "latest": "latest"
+        }
+      },
+      "ubuntu:16.04": {
+        "os_package_manager": "apt",
+        "build": "ghcr.io/spack/ubuntu-xenial",
+        "build_tags": {
+          "latest": "latest"
+        }
+      },
+      "centos:7": {
+        "os_package_manager": "yum",
+        "environment": [],
+        "build": "ghcr.io/spack/centos7",
+        "build_tags": {
+          "latest": "latest"
+        }
+      }
+    },
+    "os_package_managers": {
+      "apt": {
+        "update": "apt-get -yqq update && apt-get -yqq upgrade",
+        "install": "apt-get -yqq install",
+        "clean": "rm -rf /var/lib/apt/lists/*"
+      },
+      "yum": {
+        "update": "yum update -y && yum install -y epel-release && yum update -y",
+        "install": "yum install -y",
+        "clean": "rm -rf /var/cache/yum  && yum clean all"
+      }
+    }
+  }
