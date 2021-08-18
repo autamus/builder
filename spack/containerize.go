@@ -67,8 +67,8 @@ func Containerize(sEnv repo.SpackEnv, isPR bool, PublicKeyURL string) (dockerfil
 		"&& export AWS_ACCESS_KEY_ID=$(cat /run/secrets/aws_id) " +
 		"&& export AWS_SECRET_ACCESS_KEY=$(cat /run/secrets/aws_secret) " +
 		"&& curl " + PublicKeyURL + " > key.pub " +
-		"&& spack gpg trust key.pub" +
-		"&& spack --env . install --fail-fast" +
+		"&& spack gpg trust key.pub " +
+		"&& spack --env . install --fail-fast " +
 		"&& spack gpg trust /run/secrets/sign_key " +
 		"&& spack buildcache create -r -a -m autamus && spack gc -y"
 
