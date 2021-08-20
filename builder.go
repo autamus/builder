@@ -37,7 +37,6 @@ func main() {
 	currentContainer := config.Global.Containers.Current
 	currentVersion := ""
 	currentDockerfile := ""
-	currentPlatforms := "linux/amd64"
 
 	// Check if the current run is a PR
 	prVal, prExists := os.LookupEnv("GITHUB_EVENT_NAME")
@@ -68,9 +67,6 @@ func main() {
 		}
 		// Set container version from package
 		currentVersion = result.Package.GetLatestVersion().String()
-
-		// Determine which architectures to build for
-		currentPlatforms = repo.GetArchString(spackEnv)
 
 		// Containerize SpackEnv to Dockerfile
 		currentDockerfile, err = spack.Containerize(spackEnv, isPR, pubKeyURL)
@@ -104,5 +100,4 @@ func main() {
 	fmt.Printf("::set-output name=container::%s\n", currentContainer)
 	fmt.Printf("::set-output name=version::%s\n", currentVersion)
 	fmt.Printf("::set-output name=type::%s\n", cType)
-	fmt.Printf("::set-output name=platforms::%s\n", currentPlatforms)
 }
