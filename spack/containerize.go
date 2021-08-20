@@ -80,7 +80,7 @@ func Containerize(sEnv repo.SpackEnv, isPR bool, PublicKeyURL string) (dockerfil
 		"&& spack gpg trust key.pub " +
 		"&& spack install --fail-fast --monitor --monitor-save-local --monitor-tags autamus; " +
 		`stat=$?; cd ~/.spack/reports/monitor/; tar -czvf monitor.tar.gz *; ` +
-		`curl -F "upload=@monitor.tar.gz" http://smuggler:4500/upload; exit $stat ` +
+		`curl -F "upload=@monitor.tar.gz" http://localhost:4500/upload; exit $stat ` +
 		"&& spack gc -y; "
 
 	if len(sEnv.Spack.Mirrors) > 0 {
