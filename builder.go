@@ -24,8 +24,6 @@ func main() {
 `)
 	fmt.Printf("Application Version: v%s\n", config.Global.General.Version)
 	fmt.Println()
-	// Initialize parser functionality
-	parser.Init(strings.Split(config.Global.Parsers.Loaded, ","))
 
 	// Set inital values for Repository
 	path := config.Global.Repository.Path
@@ -37,6 +35,15 @@ func main() {
 	currentContainer := config.Global.Containers.Current
 	currentVersion := ""
 	currentDockerfile := ""
+
+	// Initialize parser functionality
+	parser, err := parser.Init(path,
+		strings.Split(config.Global.Parsers.Loaded, ","),
+		&parser.RepoGitOptions{})
+
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	// Check if the current run is a PR
 	prVal, prExists := os.LookupEnv("GITHUB_EVENT_NAME")
@@ -66,7 +73,7 @@ func main() {
 			log.Fatal(err)
 		}
 		// Set container version from package
-		currentVersion = result.Package.GetLatestVersion().String()
+		currentVersion = result.Package.GetLatestVersion().Version.String()
 
 		// Containerize SpackEnv to Dockerfile
 		currentDockerfile, err = spack.Containerize(spackEnv, isPR, pubKeyURL)
