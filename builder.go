@@ -68,7 +68,7 @@ func main() {
 			log.Fatal(err)
 		}
 		// Parse package for main spec
-		result, err := parser.Parse(specPath)
+		result, err := parser.Parse(specPath, false)
 		if err != nil {
 			log.Fatal(err)
 		}
