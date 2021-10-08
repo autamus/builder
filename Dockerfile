@@ -20,7 +20,7 @@ RUN go build -o builder .
 FROM ghcr.io/spack/ubuntu-bionic:latest
 
 RUN apt-get update && \
-    apt-get install -y ca-certificates
+    apt-get install -y ca-certificates gringo
 
 # Set the Current Working Directory inside the container
 WORKDIR /app
