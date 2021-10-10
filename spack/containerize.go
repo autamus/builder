@@ -57,13 +57,18 @@ func Containerize(sEnv repo.SpackEnv, isPR bool, PublicKeyURL string) (dockerfil
 	addCommand := "as builder\n\nADD repo /opt/spack/var/spack/repos/builtin/packages/"
 	dockerfile = strings.Replace(dockerfile, addHook, addCommand, 1)
 
+	// Add solver clingo so it doesn't need to be bootstrapped
+	aptReplace := "python3-dev"
+	aptReplaceWith := "python3-dev gringo"
+	dockerfile = strings.Replace(dockerfile, aptReplace, aptReplaceWith, 1)
+
 	// Add support for build cache
 	buildOld := `RUN cd /opt/spack-environment && \
     spack env activate . && \
     spack install --fail-fast && \
     spack gc -y`
 
-	buildOldMonitor := "RUN  cd /opt/spack-environment && spack env activate . && export SPACKMON_USER=$(cat /run/secrets/su) && export SPACKMON_TOKEN=$(cat /run/secrets/st) && spack install --fail-fast && spack gc -y"
+	buildOldMonitor := "RUN cd /opt/spack-environment && spack env activate . && export SPACKMON_USER=$(cat /run/secrets/su) && export SPACKMON_TOKEN=$(cat /run/secrets/st) && spack install --fail-fast && spack gc -y"
 	buildPublish := "RUN --mount=type=secret,id=aws_id " +
 		"--mount=type=secret,id=aws_secret " +
 		"--mount=type=secret,id=sign_key " +
