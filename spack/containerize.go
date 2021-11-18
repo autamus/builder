@@ -46,12 +46,6 @@ func Containerize(sEnv repo.SpackEnv, isPR bool, PublicKeyURL string) (dockerfil
 	// Add Docker ENV to dockerfile
 	envOld := "COPY --from=builder /opt/spack-environment /opt/spack-environment"
 	envNew := "ENV PATH=/opt/view/bin:/opt/spack/bin:$PATH\n\n" + envOld
-
-	// Any post commands to run?
-	exists, err := utils.Exists("pre.sh")
-	if exists {
-		envNew += "\nCOPY pre.sh /tmp/pre.sh\nRUN chmod +x /tmp/pre.sh && /tmp/pre.sh\n"
-	}
 	dockerfile = strings.Replace(dockerfile, envOld, envNew, 1)
 
 	// Modify entrypoint
@@ -62,6 +56,12 @@ func Containerize(sEnv repo.SpackEnv, isPR bool, PublicKeyURL string) (dockerfil
 	// Add Autamus Repo to Container
 	addHook := "as builder"
 	addCommand := "as builder\n\nADD repo /opt/spack/var/spack/repos/builtin/packages/"
+
+	// Any post commands to run, AFTER we have copied over repo here?
+	exists, err := utils.Exists("pre.sh")
+	if exists {
+		addCommand += "\nCOPY pre.sh /tmp/pre.sh\nRUN chmod +x /tmp/pre.sh && /tmp/pre.sh\n"
+	}
 	dockerfile = strings.Replace(dockerfile, addHook, addCommand, 1)
 
 	// Add support for build cache
