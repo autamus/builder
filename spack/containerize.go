@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/autamus/builder/repo"
+	"github.com/autamus/builder/utils"
 	"gopkg.in/yaml.v2"
 )
 
@@ -45,6 +46,12 @@ func Containerize(sEnv repo.SpackEnv, isPR bool, PublicKeyURL string) (dockerfil
 	// Add Docker ENV to dockerfile
 	envOld := "COPY --from=builder /opt/spack-environment /opt/spack-environment"
 	envNew := "ENV PATH=/opt/view/bin:/opt/spack/bin:$PATH\n\n" + envOld
+
+	// Any post commands to run?
+	exists, err := utils.Exists("pre.sh")
+	if exists {
+		envNew += "\nCOPY pre.sh /tmp/pre.sh\nRUN chmod +x /tmp/pre.sh && /tmp/pre.sh\n"
+	}
 	dockerfile = strings.Replace(dockerfile, envOld, envNew, 1)
 
 	// Modify entrypoint
@@ -86,6 +93,13 @@ func Containerize(sEnv repo.SpackEnv, isPR bool, PublicKeyURL string) (dockerfil
 		`stat=$?; cd ~/.spack/reports/monitor/; tar -czvf monitor.tar.gz *; ` +
 		`curl -F "upload=@monitor.tar.gz" http://localhost:4500/upload; exit $stat ` +
 		"&& spack gc -y; "
+
+	// Any post commands to run?
+	exists, err = utils.Exists("post.sh")
+	if exists {
+		buildPR += "\nCOPY post.sh /tmp/post.sh\nRUN chmod +x /tmp/post.sh && /tmp/post.sh\n"
+		buildPublish += "\nCOPY post.sh /tmp/post.sh\nRUN chmod +x /tmp/post.sh && /tmp/post.sh\n"
+	}
 
 	if len(sEnv.Spack.Mirrors) > 0 {
 		if isPR {
